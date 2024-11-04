@@ -1,21 +1,39 @@
 #include <iostream>
+#include <vector>
 #include <assert.h>
 
-int printColorMap() {
-    const char* majorColor[] = {"White", "Red", "Black", "Yellow", "Violet"};
-    const char* minorColor[] = {"Blue", "Orange", "Green", "Brown", "Slate"};
-    int i = 0, j = 0;
-    for(i = 0; i < 5; i++) {
-        for(j = 0; j < 5; j++) {
-            std::cout << i * 5 + j << " | " << majorColor[i] << " | " << minorColor[i] << "\n";
-        }
-    }
-    return i * j;
+const std::vector<std::string> majorColors = {"White", "Red", "Black", "Yellow", "Violet"};
+const std::vector<std::string> minorColors = {"Blue", "Orange", "Green", "Brown", "Slate"};
+
+std::pair<std::string, std::string> testNumberToPair(int pairNumber, const std::vector<std::string> majorColors, const std::vector<std::string> minorColors)
+{
+    int zeroBasedPairNumber = pairNumber - 1;
+    return {majorColors.at(zeroBasedPairNumber / minorColors.size()), minorColors.at(zeroBasedPairNumber %  minorColors.size())};
 }
 
-int main() {
-    int result = printColorMap();
-    assert(result == 25);
+std::string getColorCodePair(int pairNumber, const std::vector<std::string> majorColors, const std::vector<std::string> minorColors)
+{
+     std::pair<std::string, std::string> colorPair = testNumberToPair(pairNumber, majorColors, minorColors);
+     std::string colorCodePair = std::to_string(pairNumber) + " | ";
+     colorCodePair += colorPair.first + " | ";
+     colorCodePair += colorPair.second;
+     return colorCodePair;
+}
+
+void printColorMap()
+{
+    for(int i = 1; i <= 25; i++) 
+    {
+        std::cout << getColorCodePair(i, majorColors, minorColors) << '\n';
+    }
+}
+
+int main() 
+{
+    printColorMap();
+    assert(getColorCodePair(7, majorColors, minorColors) == "7 | Red | Orange");
+    assert(getColorCodePair(16, majorColors, minorColors) == "16 | Yellow | Blue");
+    assert(getColorCodePair(24, majorColors, minorColors) == "24 | Violet | Slate");
     std::cout << "All is well (maybe!)\n";
     return 0;
 }
